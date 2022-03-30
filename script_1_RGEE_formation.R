@@ -1,20 +1,20 @@
 
 ###################################################
 ## 1 - Installation de rgee
-# 
-# library(rgee)
-# ee_install() #initialise earth engine par une connexion et cr?ation d'un nouvel environnement python
-# ee_Initialize()
-# 
-# ## restart R
-# ee_check() ## V?rifier que tout est OK 
-
-# ee_install_upgrade()
-
-## Packages RGEE
 
 library(rgee)
-ee_Initialize() # Initialisation de la connexion avec GEE
+ee_install() #initialise earth engine par une connexion et creation d'un nouvel environnement python
+ee_Initialize()
+
+# ## restart R
+ee_check() ## Verifier que tout est OK
+
+ee_install_upgrade()
+
+## Package RGEE
+
+library(rgee)
+ee_Initialize() # Initialisation de la connexion avec GEE (a faire a chaque utilisation de rgee)
 
 ###################################################
 ## 2 - Telechargement des donnees et visualisation 
