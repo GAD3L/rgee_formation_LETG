@@ -3,7 +3,7 @@
 Ce répertoire regroupe les codes et données utilisés pendant la formation R de juin 2021.
 
 ## Description des scrpits
-Les scripts regroupes une série de petits execices. 
+Les scripts regroupent une série d'execices. 
 ### script 1  
 1 - Installation de rgee  
 2 - Téléchargement des données et visualisation   
