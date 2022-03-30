@@ -12,6 +12,6 @@ Les scripts regroupes une série de petits execices.
 
 ## Crédits
 
-*Google Earth Engine : 
-*rgee : 
+* Google Earth Engine : 
+* rgee : 
 
