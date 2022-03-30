@@ -20,6 +20,8 @@ Les scripts regroupes une série de petits execices.
 
 Création d'un GIF : *Evolution du NDVI au Mato Grosso entre 2000 et 2020*
 
+![anim_NDVI_MT](https://user-images.githubusercontent.com/85685916/160837562-58ecbc7a-d468-4450-a91f-3d672bc97658.gif)
+
 ## Crédits
 
 * Google Earth Engine : https://earthengine.google.com/
