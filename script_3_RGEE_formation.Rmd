@@ -1,0 +1,151 @@
+---
+title: "GIF_MT_NDVI_test"
+author: "Gabriel Delaunay"
+date: "25/06/2021"
+output: html_document
+---
+
+Initialistaion du package rgee
+```{r}
+library(rgee)
+ee_Initialize()
+```
+
+Selection dans la collection MODIS de la bande NDVI, puis on récupère une image (entre le 01/07 et le 31/08 pour chaque année), son mois et son année
+
+```{r}
+
+col <- ee$ImageCollection('MODIS/006/MOD13A2')$select('NDVI')
+
+ee_print(col)
+
+get_one_date <- function(year){
+start_date = ee$Date$fromYMD(year, 7, 1)
+end_date = ee$Date$fromYMD(year, 8, 31)
+image = col$filterDate(start_date, end_date)$first()
+return(ee$Image(image))}
+
+img0 <- get_one_date(2000)
+img1 <- get_one_date(2001)
+img2 <- get_one_date(2002)
+img3 <- get_one_date(2003)
+img4 <- get_one_date(2004)
+img5 <- get_one_date(2005)
+img6 <- get_one_date(2006)
+img7 <- get_one_date(2007)
+img8 <- get_one_date(2008)
+img9 <- get_one_date(2009)
+img10 <- get_one_date(2010)
+img11 <- get_one_date(2011)
+img12 <- get_one_date(2012)
+img13 <- get_one_date(2013)
+img14 <- get_one_date(2014)
+img15 <- get_one_date(2015)
+img16 <- get_one_date(2016)
+img17 <- get_one_date(2017)
+img18 <- get_one_date(2018)
+img19 <- get_one_date(2019)
+img20 <- get_one_date(2020)
+
+collection = ee$ImageCollection(list(img0,img1,img2,img3,img4,img5,img6,img7,img8,img9,img10,img11,img12,img13,img14,img15,img16,img17,img18,img19,img20))
+
+ee_print(collection)
+
+
+```
+
+Définition du paramètre du GIF 
+
+```{r}
+# Paramètre du GIF
+visParams = list(
+    min = -2000,
+    max = 10000,
+    palette=c(
+    'FFFFFF', 'CE7E45', 'DF923D', 'F1B555', 'FCD163', '99B718', '74A901',
+    '66A000', '529400', '3E8601', '207401', '056201', '004C00', '023B01',
+    '012E01', '011D01', '011301'
+  )
+)
+
+region = ee$Geometry$Rectangle(-48.66,-7.25,-63.26,-18.84) # Rectangle sur le Mato Grosso
+
+gifParams <- list(
+  region = region,
+  dimensions = 600,
+  crs = 'EPSG:4326',
+  framesPerSecond = 0.5
+)
+
+```
+
+Récupération de la date (mois et année) pour chaque image de la collection 
+
+```{r}
+# Recuparation de la date (mois et annee)
+dates_month <- collection %>% 
+  ee_get_date_ic %>% # Get Image Collection dates
+  '[['("time_start") %>% # Select time_start column
+  lubridate::month() %>% # Get the month component of the datetime
+  '['(month.abb, .) # subset around month abbreviations
+
+dates_years <- collection %>% 
+  ee_get_date_ic %>% # Get Image Collection dates
+  '[['("time_start") %>% # Select time_start column
+  lubridate::year()  # Get the month component of the datetime
+  
+```
+
+Récupération de la frontière du Mato Grosso et paramètrage de la visualisation de l'image 
+
+```{r}
+# Frontiere Mato Grosso
+frontiere_MT <- ee$FeatureCollection('FAO/GAUL/2015/level1')$filter(ee$Filter$eq('ADM1_NAME','Mato Grosso'))$geometry()
+
+# Parmètre de visualisation de l'image 
+rgbVis <- collection$map(function(img) {
+  do.call(img$visualize, visParams) %>% 
+    ee$Image$clip(frontiere_MT)
+})
+
+ee_print(rgbVis)
+```
+
+Création du GIF 
+
+```{r}
+animation <- ee_utils_gif_creator(rgbVis, gifParams, mode = "wb")
+anim <- animation %>% 
+  ee_utils_gif_annotate(
+    text = "Mato Grosso, Brazil",
+    size = 25, color = "white",
+    location = "+300+30"
+  ) %>% 
+  ee_utils_gif_annotate(
+    text = dates_month, 
+    size = 20, 
+    location = "+260+430",
+    color = "white"
+  ) %>% 
+  ee_utils_gif_annotate(
+    text = dates_years, 
+    size = 20, 
+    location = "+300+430",
+    color = "white"
+  )%>% 
+  ee_utils_gif_annotate(
+    text = "NDVI:MODIS/006/MOD13A2",
+    size = 10, color = "white",
+    location = "+410+450"
+  )
+
+
+anim
+
+```
+
+Enregistrement du GIF
+
+```{r}
+ee_utils_gif_save(anim, path = "F:/RGEE/formation/4_GIF/anim_NDVI_MT.gif")
+```
