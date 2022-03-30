@@ -5,6 +5,8 @@ date: "25/06/2021"
 output: html_document
 ---
 
+Création d'un GIF : Evolution du NDVI au Mato Grosso entre 2000 et 2020
+
 Initialistaion du package rgee
 ```{r}
 library(rgee)
