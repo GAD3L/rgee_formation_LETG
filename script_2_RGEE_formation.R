@@ -188,7 +188,7 @@ img_raster <- ee_as_raster(
 )
 
 ###################################################
-### Serie temporelle 
+## 8 - Serie temporelle 
 
 # Telechargement collection MODIS
 col <- ee$ImageCollection('MODIS/006/MOD13A2')$select('NDVI')$filterDate('2020-01-01','2020-12-31')
